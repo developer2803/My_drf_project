@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  obfm_db:
+    image: postgres
+    volumes:
+      - ./data/obfm_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=obfm
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=obfm_super_secret2
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+      
+    ports:
+      - '8000:8000'
+    depends_on:
+      - obfm_db
